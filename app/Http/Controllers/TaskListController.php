@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\TaskList;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TaskListController extends Controller
 {
+
     public function index()
     {
-        $taskLists = TaskList::where('user_id', auth()->id())->paginate(10);
+        $taskLists = TaskList::where('user_id', Auth::id())->paginate(10);
         return view('user.task-lists.list', compact('taskLists'));
     }
 
@@ -25,7 +27,7 @@ class TaskListController extends Controller
         ]);
 
         TaskList::create([
-            'user_id' => auth()->id(),
+            'user_id' => Auth::id(),
             'name' => $request->name,
         ]);
 
@@ -34,7 +36,7 @@ class TaskListController extends Controller
 
     public function edit(TaskList $taskList)
     {
-        return view('user.list.edit', compact('taskList'));
+        return view('user.task-lists.update', compact('taskList'));
     }
 
     public function update(Request $request, TaskList $taskList)

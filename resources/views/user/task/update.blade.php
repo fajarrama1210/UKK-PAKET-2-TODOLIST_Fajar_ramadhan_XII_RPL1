@@ -2,6 +2,8 @@
 @section('title')
     Update Tugas
 @endsection
+<?php $listid = request()->segment(4); ?>
+
 @section('content')
     <div class="row">
         <div class="col-md-8">
@@ -13,7 +15,8 @@
                         </div>
                         <div class="col-md-6 text-end">
                             <div class="">
-                                <a href="{{ route('user.tasks.list') }}" class="btn btn-outline-indigo btn-sm fw-bold">
+                                <a href="{{ route('user.tasks.list.filter', ['taskList' => $listid]) }}"
+                                    class="btn btn-outline-indigo btn-sm fw-bold">
                                     <b>← Kembali</b>
                                 </a>
                             </div>
@@ -68,9 +71,12 @@
                             <div class="mb-3">
                                 <label for="status" class="form-label">Status</label>
                                 <select name="status" id="status" class="form-select" required>
-                                    <option value="pending" {{ $task->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                                    <option value="In Progress" {{ $task->status == 'In Progress' ? 'selected' : '' }}>In Progress</option>
-                                    <option value="completed" {{ $task->status == 'completed' ? 'selected' : '' }}>Completed</option>
+                                    <option value="pending" {{ $task->status == 'pending' ? 'selected' : '' }}>Pending
+                                    </option>
+                                    <option value="In Progress" {{ $task->status == 'In Progress' ? 'selected' : '' }}>In
+                                        Progress</option>
+                                    <option value="completed" {{ $task->status == 'completed' ? 'selected' : '' }}>
+                                        Completed</option>
                                 </select>
                             </div>
                             <div class="mb-3">

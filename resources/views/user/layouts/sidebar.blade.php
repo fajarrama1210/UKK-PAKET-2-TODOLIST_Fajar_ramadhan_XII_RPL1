@@ -51,7 +51,7 @@
                 <!-- Divider -->
                 <li class="nav-small-cap">
                     <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-                    <span class="hide-menu">My Task Lists</span>
+                    <span class="hide-menu">Tugas Saya</span>
                 </li>
 
                 <!-- Loop melalui Task Lists -->
@@ -61,7 +61,7 @@
                             href="{{ route('user.tasks.list.filter', ['taskList' => $taskList->id]) }}"
                             aria-expanded="false">
                             <span>
-                                {{-- @include('components.icons.task') <!-- Ganti dengan icon task list jika diperlukan --> --}}
+                                @include('components.icons.circle') <!-- Ganti dengan icon task list jika diperlukan -->
                             </span>
                             <span class="hide-menu">{{ $taskList->name }}</span>
                         </a>

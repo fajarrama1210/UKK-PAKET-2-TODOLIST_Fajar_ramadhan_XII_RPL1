@@ -59,11 +59,11 @@ Route::prefix('admin')
         Route::prefix('tasks')->name('tasks.')->group(function () {
             Route::get('/', [TaskController::class, 'index'])->name('list');
             Route::get('/list/{taskList}', [TaskController::class, 'index'])->name('list.filter');
-            Route::get('/add', [TaskController::class, 'create'])->name('add');
+            Route::get('/add/{listid}', [TaskController::class, 'create'])->name('add');
             Route::post('/store', [TaskController::class, 'store'])->name('store');
             Route::get('/edit/{task}', [TaskController::class, 'edit'])->name('edit');
             Route::put('/update/{task}', [TaskController::class, 'update'])->name('update');
-            Route::delete('/delete/{task}', [TaskController::class, 'destroy'])->name('delete');
+            Route::delete('/delete/{task}/{listid}', [TaskController::class, 'destroy'])->name('delete');
             Route::get('/show/{task}', [TaskController::class, 'show'])->name('show');
         });
 

@@ -105,7 +105,9 @@
             <div class="px-4 py-3 border-bottom d-flex justify-content-between align-items-center">
                 <h5 class="card-title fw-semibold mb-0 lh-sm">Tabel Tugas</h5>
                 <div>
-                    <a href="{{ route('user.tasks.add') }}" class="btn btn-primary btn-sm me-2">Tambah Data</a>
+                    <?php $listid = request()->segment(4); ?>
+                     <a href="{{ route('user.tasks.add',$listid) }}" class="btn btn-primary btn-sm me-2">Tambah
+                        Data</a>
                     <button class="btn btn-success btn-sm">Download Excel</button>
                 </div>
             </div>
@@ -220,8 +222,7 @@
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <form action="{{ route('user.tasks.delete', $task->id) }}"
-                                                        method="POST" style="display: inline;">
+                                                    <form action="{{ route('user.tasks.delete', ['task' => $task->id, 'listid' => $listid]) }}" method="POST" style="display: inline;">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit"

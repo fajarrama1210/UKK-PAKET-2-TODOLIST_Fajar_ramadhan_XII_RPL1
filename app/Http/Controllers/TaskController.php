@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Models\Category;
+use App\Models\TaskList;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
-use App\Models\Category;
 
 class TaskController extends Controller
 {
@@ -16,8 +17,12 @@ class TaskController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Task::where('user_id', Auth::id());
+        // Ambil task list pertama milik user yang sedang login, jika tidak ada, tampilkan 404
+        $listid = TaskList::where('user_id', Auth::id())->firstOrFail();
 
+        $query = Task::where('user_id', Auth::id())->where('list_id', $listid->id);
+
+        // Menambahkan filter
         if ($request->has('filter_kategori') && $request->filter_kategori != '') {
             $query->where('category_id', $request->filter_kategori);
         }
@@ -34,8 +39,9 @@ class TaskController extends Controller
             $query->whereYear('date', $request->filter_tahun);
         }
 
+        // Ambil data task yang sudah difilter dan urutkan berdasarkan tanggal pembuatan
         $tasks = $query->orderBy('created_at', 'desc')->get();
-        $categories = Category::all();
+        $categories = Category::all(); // Ambil semua kategori
 
         return view('user.task.list', compact('tasks', 'categories'));
     }
@@ -54,9 +60,11 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest $request)
     {
+        $listid = $request->list_id;
         $request->validated();
         Task::create([
             'user_id' => Auth::id(),
+            'list_id' => $listid,
             'name' => $request->name,
             'category_id' => $request->category_id,
             'priority' => $request->priority,
@@ -68,14 +76,18 @@ class TaskController extends Controller
         ]);
 
 
-        return redirect()->route('user.tasks.list')->with('success', 'Data berhasil ditambahkan');
+        return redirect()->route('user.tasks.list.filter', ['taskList' => $request->list_id])->with('success', 'Data berhasil ditambahkan');
     }
     /**
      * Display the specified resource.
      */
     public function show(Task $task)
     {
-        return view('user.task.detail', compact('task'));
+        // Mendapatkan list_id dari task atau sesuaikan dengan struktur data Anda
+        $list_id = $task->list_id;
+
+        // Mengirimkan data task dan list_id ke tampilan
+        return view('user.task.detail', compact('task', 'list_id'));
     }
 
     /**
@@ -93,9 +105,17 @@ class TaskController extends Controller
     public function update(UpdateTaskRequest $request, Task $task)
     {
         $request->validated();
+        // $listid = $request->list_id;
+
+        $taskList = TaskList::where('user_id', Auth::id())->first();
+
+        if (!$taskList) {
+            return redirect()->route('user.tasks.list')->with('error', 'Task List tidak ditemukan');
+        }
 
         $time = \Carbon\Carbon::createFromFormat('H:i', $request->time)->format('H:i');
         $task->update([
+
             'name' => $request->name,
             'category_id' => $request->category_id,
             'priority' => $request->priority,
@@ -106,15 +126,20 @@ class TaskController extends Controller
             'deadline' => $request->deadline ?? $task->deadline,
         ]);
 
-        return redirect()->route('user.tasks.list')->with('success', 'Data berhasil diperbarui');
+        return redirect()->route('user.tasks.list.filter', ['taskList' => $taskList->id])->with('success', 'Data berhasil diperbarui');
     }
-        /**
+    /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Task $task)
+    public function destroy(Task $task, $listid)
     {
+        // Validasi bahwa task milik user yang sedang login
+        if ($task->user_id !== Auth::id()) {
+            return redirect()->route('user.tasks.list')->with('error', 'Unauthorized action');
+        }
+
         $task->delete();
 
-        return redirect()->route('user.tasks.list')->with('success', 'Data berhasil dihapus');
+        return redirect()->route('user.tasks.list.filter', ['taskList' => $listid])->with('success', 'Data berhasil dihapus');
     }
 }

@@ -3,6 +3,7 @@
 @section('title')
     Tambah Tugas
 @endsection
+<?php $listid = request()->segment(4); ?>
 
 @section('content')
     <div class="row">
@@ -15,7 +16,7 @@
                         </div>
                         <div class="col-md-6 text-end">
                             <div class="">
-                                <a href="{{ route('user.tasks.list') }}" class="btn btn-outline-indigo btn-sm fw-bold">
+                                <a href="{{ route('user.tasks.list.filter', $listid) }}" class="btn btn-outline-indigo btn-sm fw-bold">
                                     <b>← Kembali</b>
                                 </a>
                             </div>
@@ -36,6 +37,7 @@
 
                         <form method="POST" action="{{ route('user.tasks.store') }}">
                             @csrf
+                            <input type="hidden" name="list_id" value="{{ $listid }}">
                             <div class="mb-3">
                                 <label for="name" class="form-label">Nama</label>
                                 <input type="text" class="form-control" name="name" id="name"
@@ -92,7 +94,7 @@
                                 <small class="text-danger"><b>Deskripsi minimal 50 karakter.</b></small><br>
                                 <small class="text-danger"><b></b>Deskripsi tidak boleh lebih dari 255 karakter.</small>
                             </div>
-                            <button type="submit" class="btn btn-primary"><b>Simpan Data</b></button>
+                            <button type="submit" class="btn btn-primary" ><b>Simpan Data</b></button>
                         </form>
                     </div>
                 </div>

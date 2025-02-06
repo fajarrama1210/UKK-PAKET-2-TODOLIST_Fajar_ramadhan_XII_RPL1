@@ -1,6 +1,7 @@
 @extends('user.layouts.app')
 
 @section('title', 'Detail Task')
+<?php $listid = request()->segment(4); ?>
 
 @section('content')
     <div class="container-fluid">
@@ -39,7 +40,8 @@
                             <div class="mb-2">
                                 <label for="">Prioritas</label>
                                 <p class="mb-0 fs-5">
-                                    <span class="badge
+                                    <span
+                                        class="badge
                                         @if ($task->priority == 'low') bg-secondary
                                         @elseif ($task->priority == 'medium') bg-primary
                                         @elseif ($task->priority == 'high') bg-danger
@@ -88,7 +90,8 @@
         </div>
 
         <div class="d-flex justify-content-end mt-3">
-            <a href="{{ route('user.tasks.list') }}" class="btn btn-secondary btn-sm">Kembali ke Daftar Tugas</a>
+            <a href="{{ route('user.tasks.list.filter', $listid) }}" class="btn btn-secondary btn-sm">Kembali ke
+                Daftar Tugas</a>
         </div>
     </div>
 @endsection
