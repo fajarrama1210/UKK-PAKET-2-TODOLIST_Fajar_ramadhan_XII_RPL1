@@ -1,8 +1,7 @@
 @extends('user.layouts.app')
 
 @section('title', 'Detail Task')
-<?php $listid = request()->segment(4); ?> // segmen ke 4 disimpan  di sesion
-
+<?php $listid = $task->list_id; ?> {{-- Ambil Task List ID langsung dari task yang sedang dilihat --}}
 @section('content')
     <div class="container-fluid">
         <div class="row">
@@ -84,14 +83,13 @@
         </div>
 
         <div class="alert alert-success mb-0 mt-3">
-            <h6 class="mb-1"><b>Remainder!</b></h6>
-            <p class="mb-0">Setiap langkah kecil membawa Anda lebih dekat pada tujuan. Jangan lupa untuk kembali ke Daftar
-                Tugas Anda dan lanjutkan perjalanan ini.</p>
+            <h6 class="mb-1"><b>Deskripsi</b></h6>
+            <p class="mb-0">{{ $task->description}}</p>
         </div>
 
         <div class="d-flex justify-content-end mt-3">
-            <a href="{{ route('user.tasks.list.filter', $listid ) }}" class="btn btn-secondary btn-sm">Kembali ke
-                Daftar Tugas</a>
+            <a href="{{ route('user.tasks.list.filter', ['taskList' => $listid]) }}"
+                class="btn btn-secondary btn-sm">Kembali ke Daftar Tugas</a>
         </div>
     </div>
 @endsection

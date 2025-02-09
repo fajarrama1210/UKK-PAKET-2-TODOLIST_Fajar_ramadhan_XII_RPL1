@@ -2,8 +2,7 @@
 @section('title')
     Update Tugas
 @endsection
-<?php $listid = request()->segment(4); ?>
-
+<?php $listid = $task->list_id; ?> {{-- Ambil Task List ID langsung dari task yang sedang diedit --}}
 @section('content')
     <div class="row">
         <div class="col-md-8">
@@ -15,6 +14,7 @@
                         </div>
                         <div class="col-md-6 text-end">
                             <div class="">
+                                
                                 <a href="{{ route('user.tasks.list.filter', ['taskList' => $listid]) }}"
                                     class="btn btn-outline-indigo btn-sm fw-bold">
                                     <b>← Kembali</b>
