@@ -10,7 +10,7 @@ use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\AdminDashboardController;
 
 Route::get('/', function () {
-    return redirect()->route('login'); 
+    return redirect()->route('login');
 });
 Auth::routes();
 
@@ -35,7 +35,7 @@ Route::prefix('admin')
             Route::get('/{user}/edit', [UserController::class, 'edit'])->name('edit');
             Route::put('/{user}/update', [UserController::class, 'update'])->name('update');
             Route::delete('/{user}/delete', [UserController::class, 'destroy'])->name('delete');
-            Route::get('/show/{task}', [UserController::class, 'show'])->name('show');
+            Route::get('/show/{user}', [UserController::class, 'show'])->name('show');
         });
     });
 
