@@ -1,7 +1,7 @@
 @extends('user.layouts.app')
 
 @section('title', 'Detail Task')
-<?php $listid = request()->segment(4); ?>
+<?php $listid = request()->segment(4); ?> // segmen ke 4 disimpan  di sesion
 
 @section('content')
     <div class="container-fluid">
@@ -90,7 +90,7 @@
         </div>
 
         <div class="d-flex justify-content-end mt-3">
-            <a href="{{ route('user.tasks.list.filter', $listid) }}" class="btn btn-secondary btn-sm">Kembali ke
+            <a href="{{ route('user.tasks.list.filter', $listid ) }}" class="btn btn-secondary btn-sm">Kembali ke
                 Daftar Tugas</a>
         </div>
     </div>

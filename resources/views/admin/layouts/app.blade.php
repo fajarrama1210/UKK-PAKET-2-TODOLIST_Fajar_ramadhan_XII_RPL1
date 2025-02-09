@@ -17,6 +17,10 @@
     <!-- Owl Carousel  -->
     <link rel="stylesheet" href="{{ asset('assets/dist/libs/owl.carousel/dist/assets/owl.carousel.min.css') }}">
     <link id="themeColors" rel="stylesheet" href="{{ asset('assets/dist/css/style.min.css') }}" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Include Chart.js for grafik -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 </head>
 

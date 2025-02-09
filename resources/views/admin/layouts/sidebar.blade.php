@@ -49,18 +49,6 @@
                             </a>
                         </li>
                     </ul>
-                    <div class="unlimited-access hide-menu bg-light-primary position-relative my-7 rounded">
-                        <div class="d-flex">
-                            <div class="unlimited-access-title">
-                                <h6 class="fw-semibold fs-4 mb-6 text-dark w-85">Unlimited Access</h6>
-                                <button class="btn btn-primary fs-2 fw-semibold lh-sm">Signup</button>
-                            </div>
-                            <div class="unlimited-access-img">
-                                <img src="{{ asset('assets/dist/images/backgrounds/rocket.png') }}" alt=""
-                                    class="img-fluid">
-                            </div>
-                        </div>
-                    </div>
                 </nav>
             </div>
         </aside>

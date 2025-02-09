@@ -10,11 +10,9 @@ use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\AdminDashboardController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login'); 
 });
-
 Auth::routes();
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::prefix('admin')
     ->middleware(['auth', 'role:admin'])

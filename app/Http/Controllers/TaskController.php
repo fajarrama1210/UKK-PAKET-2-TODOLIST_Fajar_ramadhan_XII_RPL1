@@ -15,13 +15,10 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request, TaskList $taskList)
     {
-        // Ambil task list pertama milik user yang sedang login, jika tidak ada, tampilkan 404
-        $listid = TaskList::where('user_id', Auth::id())->firstOrFail();
-
-        $query = Task::where('user_id', Auth::id())->where('list_id', $listid->id);
-
+        $query = Task::where('user_id', Auth::id())
+        ->where('list_id', $taskList->id);
         // Menambahkan filter
         if ($request->has('filter_kategori') && $request->filter_kategori != '') {
             $query->where('category_id', $request->filter_kategori);
@@ -39,9 +36,8 @@ class TaskController extends Controller
             $query->whereYear('date', $request->filter_tahun);
         }
 
-        // Ambil data task yang sudah difilter dan urutkan berdasarkan tanggal pembuatan
         $tasks = $query->orderBy('created_at', 'desc')->get();
-        $categories = Category::all(); // Ambil semua kategori
+        $categories = Category::all(); 
 
         return view('user.task.list', compact('tasks', 'categories'));
     }

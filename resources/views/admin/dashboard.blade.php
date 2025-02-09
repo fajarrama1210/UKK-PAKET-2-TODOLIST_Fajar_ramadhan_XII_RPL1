@@ -1,83 +1,106 @@
 @extends('admin.layouts.app')
-@section('title')
-    DASHBOARD
-@endsection
+
 @section('content')
     <div class="container-fluid">
-        <!--  Owl carousel -->
-        <div class="owl-carousel counter-carousel owl-theme">
-            <div class="item">
-                <div class="card border-0 zoom-in bg-light-primary shadow-none">
+        <!-- Dashboard Title -->
+
+        <div class="row">
+            <!-- Kategori Card -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card shadow h-100">
                     <div class="card-body">
-                        <div class="text-center">
-                            <img src="https://demos.adminmart.com/premium/bootstrap/modernize-bootstrap/package/dist/images/svgs/icon-user-male.svg"
-                                width="50" height="50" class="mb-3" alt="" />
-                            <p class="fw-semibold fs-3 text-primary mb-1"> Employees </p>
-                            <h5 class="fw-semibold text-primary mb-0">96</h5>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <h6 class="text-muted mb-0">Kategori</h6>
+                                <h3 class="mb-0">{{ $categorycount }}</h3>
+                            </div>
+                            <i class="fas fa-box fa-2x text-primary"></i>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="item">
-                <div class="card border-0 zoom-in bg-light-warning shadow-none">
+
+            <!-- Pengguna Card -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card shadow h-100">
                     <div class="card-body">
-                        <div class="text-center">
-                            <img src="https://demos.adminmart.com/premium/bootstrap/modernize-bootstrap/package/dist/images/svgs/icon-briefcase.svg"
-                                width="50" height="50" class="mb-3" alt="" />
-                            <p class="fw-semibold fs-3 text-warning mb-1">Clients</p>
-                            <h5 class="fw-semibold text-warning mb-0">3,650</h5>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <h6 class="text-muted mb-0">Pengguna</h6>
+                                <h3 class="mb-0">{{ $usercount }}</h3>
+                            </div>
+                            <i class="fas fa-users fa-2x text-success"></i>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="item">
-                <div class="card border-0 zoom-in bg-light-info shadow-none">
+
+            <!-- Tugas Card -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card shadow h-100">
                     <div class="card-body">
-                        <div class="text-center">
-                            <img src="https://demos.adminmart.com/premium/bootstrap/modernize-bootstrap/package/dist/images/svgs/icon-mailbox.svg"
-                                width="50" height="50" class="mb-3" alt="" />
-                            <p class="fw-semibold fs-3 text-info mb-1">Projects</p>
-                            <h5 class="fw-semibold text-info mb-0">356</h5>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <h6 class="text-muted mb-0">Jumlah Tugas</h6>
+                                <h3 class="mb-0">{{ $taskcount }}</h3>
+                            </div>
+                            <i class="fas fa-tasks fa-2x text-warning"></i>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="item">
-                <div class="card border-0 zoom-in bg-light-danger shadow-none">
+
+            <!-- Tugas Tertunda Card -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card shadow h-100">
                     <div class="card-body">
-                        <div class="text-center">
-                            <img src="https://demos.adminmart.com/premium/bootstrap/modernize-bootstrap/package/dist/images/svgs/icon-favorites.svg"
-                                width="50" height="50" class="mb-3" alt="" />
-                            <p class="fw-semibold fs-3 text-danger mb-1">Events</p>
-                            <h5 class="fw-semibold text-danger mb-0">696</h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="card border-0 zoom-in bg-light-success shadow-none">
-                    <div class="card-body">
-                        <div class="text-center">
-                            <img src="https://demos.adminmart.com/premium/bootstrap/modernize-bootstrap/package/dist/images/svgs/icon-speech-bubble.svg"
-                                width="50" height="50" class="mb-3" alt="" />
-                            <p class="fw-semibold fs-3 text-success mb-1">Payroll</p>
-                            <h5 class="fw-semibold text-success mb-0">$96k</h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="card border-0 zoom-in bg-light-info shadow-none">
-                    <div class="card-body">
-                        <div class="text-center">
-                            <img src="https://demos.adminmart.com/premium/bootstrap/modernize-bootstrap/package/dist/images/svgs/icon-connect.svg"
-                                width="50" height="50" class="mb-3" alt="" />
-                            <p class="fw-semibold fs-3 text-info mb-1">Reports</p>
-                            <h5 class="fw-semibold text-info mb-0">59</h5>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <h6 class="text-muted mb-0">Tugas Tertunda</h6>
+                                <h3 class="mb-0">{{ $taskPending }}</h3>
+                            </div>
+                            <i class="fas fa-clock fa-2x text-danger"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Grafik Tugas Selesai per Bulan -->
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h4 class="card-title mb-4">Jumlah Tugas Selesai per Bulan</h4>
+                        <canvas id="taskCompleteChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- Script untuk Chart.js -->
+    <script>
+        var ctx = document.getElementById('taskCompleteChart').getContext('2d');
+        var taskCompleteChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: @json($months), // Menampilkan bulan
+                datasets: [{
+                    label: 'Tugas Selesai',
+                    data: @json($taskCounts), // Menampilkan jumlah tugas selesai
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    fill: true,
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
 @endsection
