@@ -87,13 +87,13 @@
                                                         @include('components.icons.detail')Detail
                                                     </a>
                                                 </li>
-                                                <li>
+                                                <li>    
                                                     <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('admin.user.edit', $user->id) }}">
                                                         @include('components.icons.edit')Edit
                                                     </a>
                                                                                                     </li>
                                                 <li>
-                                                    <form action="" method="POST">
+                                                    <form action="{{ route('admin.user.delete', $user->id) }}" method="POST">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit"
