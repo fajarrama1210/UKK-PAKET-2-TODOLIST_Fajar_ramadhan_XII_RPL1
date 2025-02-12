@@ -14,7 +14,7 @@
                         </div>
                         <div class="col-md-6 text-end">
                             <div class="">
-                                
+
                                 <a href="{{ route('user.tasks.list.filter', ['taskList' => $listid]) }}"
                                     class="btn btn-outline-indigo btn-sm fw-bold">
                                     <b>← Kembali</b>
@@ -83,8 +83,7 @@
                                 <label for="date" class="form-label">Tanggal</label>
                                 <input type="date" class="form-control" name="date" id="date"
                                     value="{{ old('date', $task->date) }}" required>
-                                <small>Tanggal yang Anda masukkan harus tanggal sekarang atau tanggal ke depan. Anda tidak
-                                    bisa memilih tanggal yang sudah lewat.</small>
+                                <small>Masukkan tanggal yang valid.</small>
                             </div>
 
                             <div class="mb-3">

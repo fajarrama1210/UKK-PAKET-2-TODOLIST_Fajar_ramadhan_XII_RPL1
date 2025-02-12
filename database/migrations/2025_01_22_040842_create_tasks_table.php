@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('list_id')->nullable()->constrained('task_lists')->cascadeOnDelete();
             $table->string('name');
-            $table->enum('status', ['pending','In Progress', 'completed'])->default('pending');
+            $table->enum('status', ['pending','In Progress', 'completed', 'overdue'])->default('pending');
             $table->enum('priority', ['low', 'medium', 'high']);
             $table->text('description');
             $table->foreignId('category_id')->constrained()->cascadeOnDelete();

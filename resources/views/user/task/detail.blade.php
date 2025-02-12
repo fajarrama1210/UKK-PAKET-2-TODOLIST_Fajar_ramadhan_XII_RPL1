@@ -22,20 +22,18 @@
                                 <label for="">Status</label>
                                 <p class="mb-3 fs-5">
                                     @if ($task->status == 'completed')
-                                        <span
-                                            class="badge bg-light-primary rounded-3 py-2 text-primary fw-semibold fs-2">Completed</span>
+                                        <span class="badge bg-light-primary rounded-3 py-2 text-primary fw-semibold fs-2">Completed</span>
                                     @elseif ($task->status == 'pending')
-                                        <span
-                                            class="badge bg-light-success rounded-3 py-2 text-success fw-semibold fs-2">Pending</span>
+                                        <span class="badge bg-light-success rounded-3 py-2 text-success fw-semibold fs-2">Pending</span>
                                     @elseif ($task->status == 'In Progress')
-                                        <span class="badge bg-light-warning rounded-3 py-2 text-warning fw-semibold fs-2">In
-                                            Progress</span>
+                                        <span class="badge bg-light-warning rounded-3 py-2 text-warning fw-semibold fs-2">In Progress</span>
+                                    @elseif ($task->status == 'overdue')
+                                        <span class="badge bg-light-danger rounded-3 py-2 text-danger fw-semibold fs-2">Overdue</span>
                                     @else
-                                        <span
-                                            class="badge bg-light-danger rounded-3 py-2 text-danger fw-semibold fs-2">Unknown</span>
+                                        <span class="badge bg-light-danger rounded-3 py-2 text-danger fw-semibold fs-2">Unknown</span>
                                     @endif
                                 </p>
-                            </div>
+                                                            </div>
                             <div class="mb-2">
                                 <label for="">Prioritas</label>
                                 <p class="mb-0 fs-5">
@@ -84,7 +82,7 @@
 
         <div class="alert alert-success mb-0 mt-3">
             <h6 class="mb-1"><b>Deskripsi</b></h6>
-            <p class="mb-0">{{ $task->description}}</p>
+            <p class="mb-0" style="word-wrap: break-word; white-space: normal;">{{ $task->description }}</p>
         </div>
 
         <div class="d-flex justify-content-end mt-3">

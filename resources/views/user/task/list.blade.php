@@ -50,7 +50,7 @@
                                     <option value="">Semua Prioritas</option>
                                     <option value="low" {{ request('filter_prioritas') == 'low' ? 'selected' : '' }}>Low
                                     </option>
-                                    <option value="medium" {{ request('filter_prioritas') == 'medium' ? 'selected' : '' }} >
+                                    <option value="medium" {{ request('filter_prioritas') == 'medium' ? 'selected' : '' }}>
                                         Medium</option>
                                     <option value="high" {{ request('filter_prioritas') == 'high' ? 'selected' : '' }}>
                                         High</option>
@@ -109,7 +109,7 @@
                 <h5 class="card-title fw-semibold mb-0 lh-sm">Tabel Tugas</h5>
                 <div>
                     <?php $listid = request()->segment(4); ?>
-                    <a href="{{ route('user.tasks.add', $listid) }}" class="btn btn-primary btn-sm me-2">Tambah Data</a> 
+                    <a href="{{ route('user.tasks.add', $listid) }}" class="btn btn-primary btn-sm me-2">Tambah Data</a>
                 </div>
             </div>
 
@@ -118,14 +118,30 @@
                     <table class="table border text-nowrap customize-table mb-0 align-middle">
                         <thead class="text-dark fs-4">
                             <tr>
-                                <th><h6 class="fs-4 fw-semibold mb-0">No</h6></th>
-                                <th><h6 class="fs-4 fw-semibold mb-0">Nama</h6></th>
-                                <th><h6 class="fs-4 fw-semibold mb-0">Tanggal</h6></th>
-                                <th><h6 class="fs-4 fw-semibold mb-0">Jam</h6></th>
-                                <th><h6 class="fs-4 fw-semibold mb-0">Batas Tugas</h6></th>
-                                <th><h6 class="fs-4 fw-semibold mb-0">Prioritas</h6></th>
-                                <th><h6 class="fs-4 fw-semibold mb-0">Status</h6></th>
-                                <th><h6 class="fs-4 fw-semibold mb-0">Aksi</h6></th>
+                                <th>
+                                    <h6 class="fs-4 fw-semibold mb-0">No</h6>
+                                </th>
+                                <th>
+                                    <h6 class="fs-4 fw-semibold mb-0">Nama</h6>
+                                </th>
+                                <th>
+                                    <h6 class="fs-4 fw-semibold mb-0">Tanggal</h6>
+                                </th>
+                                <th>
+                                    <h6 class="fs-4 fw-semibold mb-0">Jam</h6>
+                                </th>
+                                <th>
+                                    <h6 class="fs-4 fw-semibold mb-0">Batas Tugas</h6>
+                                </th>
+                                <th>
+                                    <h6 class="fs-4 fw-semibold mb-0">Prioritas</h6>
+                                </th>
+                                <th>
+                                    <h6 class="fs-4 fw-semibold mb-0">Status</h6>
+                                </th>
+                                <th>
+                                    <h6 class="fs-4 fw-semibold mb-0">Aksi</h6>
+                                </th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -141,21 +157,27 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <p class="mb-0 fw-normal">{{ \Carbon\Carbon::parse($task->date)->format('d F Y') }}</p>
+                                        <p class="mb-0 fw-normal">{{ \Carbon\Carbon::parse($task->date)->format('d F Y') }}
+                                        </p>
                                     </td>
                                     <td>
-                                        <p class="mb-0 fw-normal">{{ \Carbon\Carbon::parse($task->time)->format(' H:i') }}</p>
+                                        <p class="mb-0 fw-normal">{{ \Carbon\Carbon::parse($task->time)->format(' H:i') }}
+                                        </p>
                                     </td>
                                     <td>
                                         <p class="mb-0 fw-normal">
                                             @if ($task->deadline)
-                                                {{ \Carbon\Carbon::parse($task->deadline)->format('d F Y') }}
+                                                @php
+                                                    $deadline = \Carbon\Carbon::parse($task->deadline);
+                                                @endphp
+                                                <span class="{{ $deadline->isPast() ? 'text-danger' : '' }}">
+                                                    {{ $deadline->format('d F Y') }}
+                                                </span>
                                             @else
                                                 <span class="text-muted">Tidak Ada</span>
                                             @endif
                                         </p>
                                     </td>
-
                                     <td>
                                         <div class="d-flex align-items-center">
                                             @if ($task->priority == 'low')
@@ -171,36 +193,50 @@
                                     </td>
                                     <td>
                                         @if ($task->status == 'completed')
-                                            <span class="badge bg-light-primary rounded-3 py-8 text-primary fw-semibold fs-2">Completed</span>
+                                            <span
+                                                class="badge bg-light-primary rounded-3 py-8 text-primary fw-semibold fs-2">Completed</span>
                                         @elseif ($task->status == 'pending')
-                                            <span class="badge bg-light-success rounded-3 py-8 text-success fw-semibold fs-2">Pending</span>
+                                            <span
+                                                class="badge bg-light-success rounded-3 py-8 text-success fw-semibold fs-2">Pending</span>
                                         @elseif ($task->status == 'In Progress')
-                                            <span class="badge bg-light-warning rounded-3 py-8 text-warning fw-semibold fs-2">In Progress</span>
+                                            <span
+                                                class="badge bg-light-warning rounded-3 py-8 text-warning fw-semibold fs-2">In
+                                                Progress</span>
+                                        @elseif ($task->status == 'overdue')
+                                            <span
+                                                class="badge bg-light-danger rounded-3 py-8 text-danger fw-semibold fs-2">Overdue</span>
                                         @else
-                                            <span class="badge bg-light-danger rounded-3 py-8 text-danger fw-semibold fs-2">Unknown</span>
+                                            <span
+                                                class="badge bg-light-danger rounded-3 py-8 text-danger fw-semibold fs-2">Unknown</span>
                                         @endif
                                     </td>
                                     <td>
                                         <div class="dropdown dropstart">
-                                            <a href="#" class="text-muted" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <a href="#" class="text-muted" id="dropdownMenuButton"
+                                                data-bs-toggle="dropdown" aria-expanded="false">
                                                 @include('components.icons.elipis')
                                             </a>
                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                 <li>
-                                                    <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('user.tasks.show', $task->id) }}">
+                                                    <a class="dropdown-item d-flex align-items-center gap-3"
+                                                        href="{{ route('user.tasks.show', $task->id) }}">
                                                         @include('components.icons.detail') Detail
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('user.tasks.edit', $task->id) }}">
+                                                    <a class="dropdown-item d-flex align-items-center gap-3"
+                                                        href="{{ route('user.tasks.edit', $task->id) }}">
                                                         @include('components.icons.edit') Edit
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <form action="{{ route('user.tasks.delete', ['task' => $task->id, 'listid' => $listid]) }}" method="POST" style="display: inline;">
+                                                    <form
+                                                        action="{{ route('user.tasks.delete', ['task' => $task->id, 'listid' => $listid]) }}"
+                                                        method="POST" style="display: inline;">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="dropdown-item d-flex align-items-center gap-3">
+                                                        <button type="submit"
+                                                            class="dropdown-item d-flex align-items-center gap-3">
                                                             @include('components.icons.delete') Delete
                                                         </button>
                                                     </form>
@@ -212,7 +248,8 @@
                             @empty
                                 <tr>
                                     <td colspan="7" class="text-center">
-                                        <img src="{{ asset('assets/dist/images/noData.png') }}" alt="" style="max-width: 200px; max-height: 200px;">
+                                        <img src="{{ asset('assets/dist/images/noData.png') }}" alt=""
+                                            style="max-width: 200px; max-height: 200px;">
                                         <p class="fs-3 fw-semibold text-gray-md">Data tidak ditemukan</p>
                                     </td>
                                 </tr>

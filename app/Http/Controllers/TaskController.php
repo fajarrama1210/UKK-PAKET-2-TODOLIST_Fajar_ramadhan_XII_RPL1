@@ -37,7 +37,7 @@ class TaskController extends Controller
         }
 
         $tasks = $query->orderBy('created_at', 'desc')->get();
-        $categories = Category::all(); 
+        $categories = Category::all();
 
         return view('user.task.list', compact('tasks', 'categories'));
     }
