@@ -87,54 +87,19 @@
             </div>
         </div>
 
-        <!-- New Section: Line Chart for Task Count per Month -->
+        <!-- New Section: Line Chart for Task Count per Week -->
         <div class="row mt-5">
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h5>Jumlah Tugas per Bulan</h5>
+                        <h5>Jumlah Tugas per Minggu</h5>
                     </div>
                     <div class="card-body">
-                        <canvas id="taskTrendChart"></canvas>
+                        <div id="taskTrendChart"></div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <script>
-            var ctx = document.getElementById('taskTrendChart').getContext('2d');
-            var taskTrendChart = new Chart(ctx, {
-                type: 'line', // Line chart
-                data: {
-                    labels: {!! json_encode($months) !!}, // Bulan
-                    datasets: [{
-                        label: 'Jumlah Tugas',
-                        data: {!! json_encode($taskData) !!}, // Data jumlah tugas
-                        borderColor: '#4BC0C0', // Warna garis
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)', // Warna latar belakang area chart
-                        borderWidth: 2,
-                        tension: 0.3 // Menambahkan kelengkungan pada garis
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(tooltipItem) {
-                                    return 'Jumlah Tugas: ' + tooltipItem.raw; // Menampilkan jumlah tugas pada tooltip
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        </script>
-
-        <!-- Footer -->
+        </div <!-- Footer -->
         <div class="row mt-5">
             <div class="col-12">
                 <footer class="text-center">
@@ -144,4 +109,54 @@
             </div>
         </div>
     </div>
+@endsection
+@section('script')
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var options = {
+                series: [{
+                    name: 'Jumlah Tugas',
+                    data: @json($taskData) // Data jumlah tugas per minggu
+                }],
+                chart: {
+                    height: 350,
+                    type: 'line',
+                    zoom: {
+                        enabled: false
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    curve: 'straight'
+                },
+                title: {
+                    text: 'Jumlah Tugas per Minggu',
+                    align: 'left'
+                },
+                grid: {
+                    row: {
+                        colors: ['#f3f3f3', 'transparent'],
+                        opacity: 0.5
+                    },
+                },
+                xaxis: {
+                    categories: @json($weeks), // Label minggu
+                    title: {
+                        text: 'Minggu'
+                    }
+                },
+                yaxis: {
+                    title: {
+                        text: 'Jumlah Tugas'
+                    }
+                }
+            };
+
+            var chart = new ApexCharts(document.querySelector("#taskTrendChart"), options);
+            chart.render();
+        });
+    </script>
 @endsection

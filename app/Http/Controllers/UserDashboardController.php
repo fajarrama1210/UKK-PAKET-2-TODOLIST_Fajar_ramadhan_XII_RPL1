@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Task;
 use App\Models\Category;
 use App\Models\TaskList;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+
 class UserDashboardController extends Controller
 {
     public function index()
@@ -33,16 +35,23 @@ class UserDashboardController extends Controller
         // Mengambil tugas yang terbaru
         $recentTasks = Task::where('user_id', $user->id)->latest()->take(5)->get();
 
-        // Mengambil jumlah tugas per bulan untuk user yang login
-        $taskCounts = Task::where('user_id', $user->id)
-            ->select(DB::raw('MONTH(created_at) as month'), DB::raw('count(*) as count'))
-            ->groupBy(DB::raw('MONTH(created_at)'))
-            ->orderBy('month', 'asc')
+        // Menghitung jumlah tugas per minggu berdasarkan kolom `date`
+        $taskCountsPerWeek = Task::where('user_id', $user->id)
+            ->selectRaw('YEARWEEK(date, 1) as week, COUNT(*) as task_count')
+            ->groupBy('week')
+            ->orderBy('week')
             ->get();
 
-        // Mengubah data bulan dan count menjadi array untuk chart
-        $months = $taskCounts->pluck('month');
-        $taskData = $taskCounts->pluck('count');
+        // Format data untuk chart
+        $weeks = [];
+        $taskData = [];
+        foreach ($taskCountsPerWeek as $task) {
+            $weekStart = Carbon::createFromFormat('Y-m-d', date('Y-m-d', strtotime(substr($task->week, 0, 4) . '-01-01')))
+                ->addWeeks(substr($task->week, 4) - 1)
+                ->format('M d');
+            $weeks[] = $weekStart;
+            $taskData[] = $task->task_count;
+        }
 
         return view('user.dashboard', compact(
             'categoryCount',
@@ -53,8 +62,7 @@ class UserDashboardController extends Controller
             'completedTasks',
             'overdueTasks',
             'recentTasks',
-            'months',
+            'weeks',
             'taskData'
         ));
-    }
-}
+    }}
