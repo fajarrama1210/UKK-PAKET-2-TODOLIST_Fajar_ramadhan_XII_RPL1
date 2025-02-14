@@ -35,7 +35,7 @@
 
                                                 <div class="col-md-6 mb-3">
                                                     <label for="phone">Nomor HP</label>
-                                                    <input type="text" name="phone" class="form-control" placeholder="Masukan Nomor HP Anda" id="phone" />
+                                                    <input type="number" name="phone" class="form-control" placeholder="Masukan Nomor HP Anda" id="phone" />
                                                     @error('phone') <p class="text-danger">{{ $message }}</p> @enderror
                                                 </div>
                                             </div>
@@ -48,6 +48,8 @@
                                                 <div class="col-md-6 mb-3">
                                                     <label for="password">Password</label>
                                                     <input type="password" name="password" class="form-control" placeholder="Masukan Password Anda" id="password" />
+                                                    <small class="text-danger"><b>Password minimal 8 karakter</b></small>
+
                                                     @error('password') <p class="text-danger">{{ $message }}</p> @enderror
                                                 </div>
                                             </div>

@@ -2,8 +2,6 @@
 
 @section('content')
     <div class="container-fluid">
-        <!-- Dashboard Title -->
-
         <div class="row">
             <!-- Kategori Card -->
             <div class="col-xl-3 col-md-6 mb-4">
@@ -65,42 +63,69 @@
                 </div>
             </div>
         </div>
-
-        <!-- Grafik Tugas Selesai per Bulan -->
-        <div class="row">
-            <div class="col-xl-12">
-                <div class="card shadow">
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Jumlah Tugas per Minggu</h5>
+                    </div>
                     <div class="card-body">
-                        <h4 class="card-title mb-4">Jumlah Tugas Selesai per Bulan</h4>
-                        <canvas id="taskCompleteChart"></canvas>
+                        <div id="taskTrendChart"></div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Script untuk Chart.js -->
+    </div>
+@endsection
+@section('script')
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script>
-        var ctx = document.getElementById('taskCompleteChart').getContext('2d');
-        var taskCompleteChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: @json($months), // Menampilkan bulan
-                datasets: [{
-                    label: 'Tugas Selesai',
-                    data: @json($taskCounts), // Menampilkan jumlah tugas selesai
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    fill: true,
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
+        document.addEventListener('DOMContentLoaded', function() {
+            var options = {
+                series: [{
+                    name: 'Jumlah Tugas',
+                    data: @json($taskData) // Data jumlah tugas per minggu
+                }],
+                chart: {
+                    height: 350,
+                    type: 'line',
+                    zoom: {
+                        enabled: false
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    curve: 'straight'
+                },
+                title: {
+                    text: 'Jumlah Tugas per Minggu',
+                    align: 'left'
+                },
+                grid: {
+                    row: {
+                        colors: ['#f3f3f3', 'transparent'],
+                        opacity: 0.5
+                    },
+                },
+                xaxis: {
+                    categories: @json($weeks), // Label minggu
+                    title: {
+                        text: 'Minggu'
+                    }
+                },
+                yaxis: {
+                    title: {
+                        text: 'Jumlah Tugas'
                     }
                 }
-            }
+            };
+
+            var chart = new ApexCharts(document.querySelector("#taskTrendChart"), options);
+            chart.render();
         });
     </script>
 @endsection
+

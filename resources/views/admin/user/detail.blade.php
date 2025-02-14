@@ -54,19 +54,6 @@
                             </p>
                         </div>
 
-                        <!-- Status -->
-                        <div class="mb-2">
-                            <label for="">Status</label>
-                            <p class="mb-3 fs-5">
-                                @if ($user->status == 'active')
-                                    <span class="badge bg-light-primary rounded-3 py-2 text-primary fw-semibold fs-2">Active</span>
-                                @elseif ($user->status == 'inactive')
-                                    <span class="badge bg-light-danger rounded-3 py-2 text-danger fw-semibold fs-2">Inactive</span>
-                                @else
-                                    <span class="badge bg-light-danger rounded-3 py-2 text-danger fw-semibold fs-2">Unknown</span>
-                                @endif
-                            </p>
-                        </div>
 
                         <!-- Tanggal Dibuat -->
                         <div class="mb-2">

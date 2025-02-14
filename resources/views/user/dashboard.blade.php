@@ -99,7 +99,7 @@
                     </div>
                 </div>
             </div>
-        </div <!-- Footer -->
+        </div>
         <div class="row mt-5">
             <div class="col-12">
                 <footer class="text-center">

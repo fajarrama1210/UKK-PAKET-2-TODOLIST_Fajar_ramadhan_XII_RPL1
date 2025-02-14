@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <title>@yield('title')</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -17,13 +16,8 @@
     <!-- Owl Carousel  -->
     <link rel="stylesheet" href="{{ asset('assets/dist/libs/owl.carousel/dist/assets/owl.carousel.min.css') }}">
     <link id="themeColors" rel="stylesheet" href="{{ asset('assets/dist/css/style.min.css') }}" />
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Include Chart.js for grafik -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 </head>
 </head>
-
 <body>
 
     <!-- Preloader -->
@@ -54,93 +48,8 @@
             </div>
         </div>
     </div>
+    @yield('script')
 
-    <!--  Customizer -->
-    <button class="btn btn-primary p-3 rounded-circle d-flex align-items-center justify-content-center customizer-btn"
-        type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
-        @include('components.icons.settings', [
-            'dataBsToggle' => 'tooltip',
-            'dataBsPlacement' => 'top',
-            'dataBsTitle' => 'Settings',
-        ])
-    </button>
-    <div class="offcanvas offcanvas-end customizer" tabindex="-1" id="offcanvasExample"
-        aria-labelledby="offcanvasExampleLabel" data-simplebar="">
-        <div class="d-flex align-items-center justify-content-between p-3 border-bottom">
-            <h4 class="offcanvas-title fw-semibold" id="offcanvasExampleLabel">Settings</h4>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body p-4">
-            <div class="theme-option pb-4">
-                <h6 class="fw-semibold fs-4 mb-1">Theme Option</h6>
-                <div class="d-flex align-items-center gap-3 my-3">
-                    <a href="javascript:void(0)" onclick="toggleTheme('{{ asset('assets/dist/css/style.min.css') }}')"
-                        class="rounded-2 p-9 customizer-box hover-img d-flex align-items-center gap-2 light-theme text-dark">
-                        @include('components.icons.light')
-                        <span class="text-dark">Light</span>
-                    </a>
-                    <a href="javascript:void(0)"
-                        onclick="toggleTheme('{{ asset('assets/dist/css/style-dark.min.css') }}')"
-                        class="rounded-2 p-9 customizer-box hover-img d-flex align-items-center gap-2 dark-theme text-dark">
-                        @include('components.icons.dark')
-                        <span class="text-dark">Dark</span>
-                    </a>
-                </div>
-            </div>
-            <div class="theme-colors pb-4">
-                <h6 class="fw-semibold fs-4 mb-1">Theme Colors</h6>
-                <div class="d-flex align-items-center gap-3 my-3">
-                    <ul class="list-unstyled mb-0 d-flex gap-3 flex-wrap change-colors">
-                        <li
-                            class="rounded-2 p-9 customizer-box hover-img d-flex align-items-center justify-content-center">
-                            <a href="javascript:void(0)"
-                                class="rounded-circle position-relative d-block customizer-bgcolor skin1-bluetheme-primary active-theme "
-                                onclick="toggleTheme('{{ asset('assets/dist/css/style.min.css') }}')"
-                                data-color="blue_theme" data-bs-toggle="tooltip" data-bs-placement="top"
-                                data-bs-title="BLUE_THEME"></a>
-                        </li>
-                        <li
-                            class="rounded-2 p-9 customizer-box hover-img d-flex align-items-center justify-content-center">
-                            <a href="javascript:void(0)"
-                                class="rounded-circle position-relative d-block customizer-bgcolor skin2-aquatheme-primary "
-                                onclick="toggleTheme('{{ asset('assets/dist/css/style-aqua.min.css') }}')"
-                                data-color="aqua_theme" data-bs-toggle="tooltip" data-bs-placement="top"
-                                data-bs-title="AQUA_THEME"></a>
-                        </li>
-                        <li
-                            class="rounded-2 p-9 customizer-box hover-img d-flex align-items-center justify-content-center">
-                            <a href="javascript:void(0)"
-                                class="rounded-circle position-relative d-block customizer-bgcolor skin3-purpletheme-primary"
-                                onclick="toggleTheme('{{ asset('assets/dist/css/style-purple.min.css') }}')"
-                                data-color="purple_theme" data-bs-toggle="tooltip" data-bs-placement="top"
-                                data-bs-title="PURPLE_THEME"></a>
-                        </li>
-                        <li
-                            class="rounded-2 p-9 customizer-box hover-img d-flex align-items-center justify-content-center">
-                            <a href="javascript:void(0)"
-                                class="rounded-circle position-relative d-block customizer-bgcolor skin4-greentheme-primary"
-                                onclick="toggleTheme('{{ asset('assets/dist/css/style-green.min.css') }}')"
-                                data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="GREEN_THEME"></a>
-                        </li>
-                        <li
-                            class="rounded-2 p-9 customizer-box hover-img d-flex align-items-center justify-content-center">
-                            <a href="javascript:void(0)"
-                                class="rounded-circle position-relative d-block customizer-bgcolor skin5-cyantheme-primary"
-                                onclick="toggleTheme('{{ asset('assets/dist/css/style-cyan.min.css') }}')"
-                                data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="CYAN_THEME"></a>
-                        </li>
-                        <li
-                            class="rounded-2 p-9 customizer-box hover-img d-flex align-items-center justify-content-center">
-                            <a href="javascript:void(0)"
-                                class="rounded-circle position-relative d-block customizer-bgcolor skin6-orangetheme-primary"
-                                onclick="toggleTheme('{{ asset('assets/dist/css/style-orange.min.css') }}')"
-                                data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="ORANGE_THEME"></a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
     @if (session('success'))
         <script>
             document.addEventListener('DOMContentLoaded', function() {
