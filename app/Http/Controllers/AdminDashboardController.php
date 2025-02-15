@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class AdminDashboardController extends Controller
 {
@@ -18,39 +19,48 @@ class AdminDashboardController extends Controller
         $taskcount = Task::count();
         $taskPending = Task::where('status', 'pending')->count();
 
-        // Mengambil data tugas yang selesai untuk tahun ini
-        $taskCompleteMonthly = Task::where('status', 'complete')
-            ->whereYear('updated_at', Carbon::now()->year) // Mengambil data tahun ini
-            ->selectRaw('MONTH(updated_at) as month, COUNT(*) as task_count')
-            ->groupBy('month')
-            ->orderBy('month')
-            ->get();
+        // Hitung tanggal mulai dan akhir (7 hari terakhir)
+        $endDate = Carbon::now();  // Tanggal sekarang
+        $startDate = Carbon::now()->subDays(6); // 7 hari terakhir, termasuk hari ini
 
-        // Menyiapkan data untuk grafik bulanan
-        $months = [];
-        $taskCounts = [];
+        // Generate array tanggal untuk 7 hari terakhir
+        $dateRange = [];
+        $currentDate = $startDate->copy();
 
-        // Looping untuk mendapatkan jumlah tugas selesai setiap bulan dari Januari sampai Desember
-        for ($i = 1; $i <= 12; $i++) {
-            $months[] = Carbon::create()->month($i)->format('M'); // Menampilkan nama bulan
-            $taskCounts[] = $taskCompleteMonthly->where('month', $i)->first()->task_count ?? 0; // Ambil jumlah tugas selesai, jika tidak ada maka 0
+        while ($currentDate <= $endDate) {
+            $dateRange[] = $currentDate->format('Y-m-d');
+            $currentDate->addDay();
         }
 
-        // Menghitung jumlah tugas per minggu
+        // Query data tugas harian untuk 7 hari terakhir
+        $dailyTasks = Task::whereBetween('created_at', [$startDate, $endDate])
+            ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
+            ->groupBy(DB::raw('DATE(created_at)'))  // Menggunakan DATE(created_at) dalam GROUP BY
+            ->get()
+            ->keyBy('date');
+
+        // Query data tugas selesai harian untuk 7 hari terakhir
+        $dailyCompleted = Task::where('status', 'complete')
+            ->whereBetween('updated_at', [$startDate, $endDate])
+            ->selectRaw('DATE(updated_at) as date, COUNT(*) as count')
+            ->groupBy(DB::raw('DATE(updated_at)'))  // Menggunakan DATE(updated_at) dalam GROUP BY
+            ->get()
+            ->keyBy('date');
+
+        // Format data untuk chart
+        $formattedDates = [];
         $taskData = [];
-        $weeks = [];
-        for ($i = 1; $i <= 52; $i++) {
-            $startOfWeek = Carbon::now()->startOfYear()->addWeeks($i - 1);
-            $endOfWeek = Carbon::now()->startOfYear()->addWeeks($i)->subDay();
+        $completedData = [];
 
-            $taskCount = Task::where('status', 'complete')
-                ->whereBetween('updated_at', [$startOfWeek, $endOfWeek])
-                ->count();
+        foreach ($dateRange as $date) {
+            $formattedDate = Carbon::createFromFormat('Y-m-d', $date)->format('d M');  // Format tanggal
+            $formattedDates[] = $formattedDate;
 
-            $taskData[] = $taskCount;
-            $weeks[] = 'Minggu ' . $i;
+            // Ambil jumlah tugas atau setel ke 0 jika tidak ada data
+            $taskData[] = $dailyTasks->has($date) ? $dailyTasks[$date]->count : 0;
+            $completedData[] = $dailyCompleted->has($date) ? $dailyCompleted[$date]->count : 0;
         }
 
-        return view('admin.dashboard', compact('categorycount', 'usercount', 'taskcount', 'taskPending', 'months', 'taskCounts', 'taskData', 'weeks'));
+        return view('admin.dashboard', compact('categorycount', 'usercount', 'taskcount', 'taskPending', 'formattedDates', 'taskData', 'completedData'));
     }
-}
+    }
