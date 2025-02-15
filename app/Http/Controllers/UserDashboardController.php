@@ -14,44 +14,63 @@ class UserDashboardController extends Controller
 {
     public function index()
     {
-        // Ambil data berdasarkan user yang sedang login
         $user = Auth::user();
+        $timezone = 'Asia/Jakarta';
 
-        // Menghitung jumlah kategori
+        // Hitung tanggal mulai dan akhir (7 hari terakhir)
+        $endDate = Carbon::now($timezone);
+        $startDate = Carbon::now($timezone)->subDays(6);
+
+        // Generate array tanggal untuk 7 hari terakhir
+        $dateRange = [];
+        $currentDate = $startDate->copy();
+
+        while ($currentDate <= $endDate) {
+            $dateRange[] = $currentDate->format('Y-m-d');
+            $currentDate->addDay();
+        }
+
+        // Query data tugas harian
+        $dailyTasks = Task::where('user_id', $user->id)
+            ->whereBetween('created_at', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d 23:59:59')])
+            ->selectRaw('DATE(CONVERT_TZ(created_at, "+00:00", "+07:00")) as date, COUNT(*) as count')
+            ->groupBy(DB::raw('DATE(CONVERT_TZ(created_at, "+00:00", "+07:00"))'))
+            ->get()
+            ->keyBy('date');
+
+        // Query data tugas selesai harian
+        $dailyCompleted = Task::where('user_id', $user->id)
+            ->where('status', 'completed')
+            ->whereBetween('updated_at', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d 23:59:59')])
+            ->selectRaw('DATE(CONVERT_TZ(updated_at, "+00:00", "+07:00")) as date, COUNT(*) as count')
+            ->groupBy(DB::raw('DATE(CONVERT_TZ(updated_at, "+00:00", "+07:00"))'))
+            ->get()
+            ->keyBy('date');
+
+        // Format data untuk chart
+        $formattedDates = [];
+        $taskData = [];
+        $completedData = [];
+
+        foreach ($dateRange as $date) {
+            $formattedDate = Carbon::createFromFormat('Y-m-d', $date, $timezone)->format('d M');
+            $formattedDates[] = $formattedDate;
+
+            $taskData[] = $dailyTasks->has($date) ? $dailyTasks[$date]->count : 0;
+            $completedData[] = $dailyCompleted->has($date) ? $dailyCompleted[$date]->count : 0;
+        }
+
+        // Statistik lainnya (opsional)
         $categoryCount = Category::count();
-
-        // Menghitung jumlah task list yang dimiliki oleh user
         $taskListCount = TaskList::where('user_id', $user->id)->count();
-
-        // Menghitung jumlah task yang dimiliki oleh user
         $taskCount = Task::where('user_id', $user->id)->count();
-
-        // Menghitung jumlah task berdasarkan status
         $pendingTasks = Task::where('user_id', $user->id)->where('status', 'pending')->count();
         $inProgressTasks = Task::where('user_id', $user->id)->where('status', 'In Progress')->count();
         $completedTasks = Task::where('user_id', $user->id)->where('status', 'completed')->count();
-        $overdueTasks = Task::where('user_id', $user->id)->where('deadline', '<', now())->where('status', '!=', 'completed')->count();
-
-        // Mengambil tugas yang terbaru
-        $recentTasks = Task::where('user_id', $user->id)->latest()->take(5)->get();
-
-        // Menghitung jumlah tugas per minggu berdasarkan kolom `date`
-        $taskCountsPerWeek = Task::where('user_id', $user->id)
-            ->selectRaw('YEARWEEK(date, 1) as week, COUNT(*) as task_count')
-            ->groupBy('week')
-            ->orderBy('week')
-            ->get();
-
-        // Format data untuk chart
-        $weeks = [];
-        $taskData = [];
-        foreach ($taskCountsPerWeek as $task) {
-            $weekStart = Carbon::createFromFormat('Y-m-d', date('Y-m-d', strtotime(substr($task->week, 0, 4) . '-01-01')))
-                ->addWeeks(substr($task->week, 4) - 1)
-                ->format('M d');
-            $weeks[] = $weekStart;
-            $taskData[] = $task->task_count;
-        }
+        $overdueTasks = Task::where('user_id', $user->id)
+            ->where('deadline', '<', now())
+            ->where('status', '!=', 'completed')
+            ->count();
 
         return view('user.dashboard', compact(
             'categoryCount',
@@ -61,8 +80,9 @@ class UserDashboardController extends Controller
             'inProgressTasks',
             'completedTasks',
             'overdueTasks',
-            'recentTasks',
-            'weeks',
-            'taskData'
+            'formattedDates',
+            'taskData',
+            'completedData'
         ));
-    }}
+    }
+    }

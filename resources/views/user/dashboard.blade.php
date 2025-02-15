@@ -103,60 +103,93 @@
         <div class="row mt-5">
             <div class="col-12">
                 <footer class="text-center">
-                    <p>&copy; 2025 Todo App. All rights reserved.</p>
-                    <p>Contact us at: <a href="mailto:support@todoapp.com">support@todoapp.com</a></p>
+                    <p>&copy; 2025 Compirayc by Fajar Ramadhan. All rights reserved.</p>
+                    <p>Contact us on Instagram: <a href="https://www.instagram.com/jar_rmd/" target="_blank">jar_rmd</a></p>
                 </footer>
             </div>
         </div>
-    </div>
+            </div>
 @endsection
 @section('script')
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var options = {
-                series: [{
-                    name: 'Jumlah Tugas',
-                    data: @json($taskData) // Data jumlah tugas per minggu
-                }],
-                chart: {
-                    height: 350,
-                    type: 'line',
-                    zoom: {
-                        enabled: false
-                    }
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var options = {
+            series: [{
+                name: 'Jumlah Tugas',
+                data: @json($taskData)
+            }, {
+                name: 'Tugas Selesai',
+                data: @json($completedData)
+            }],
+            chart: {
+                type: 'line',
+                height: 350,
+                zoom: { enabled: false },
+                toolbar: { show: true }
+            },
+            stroke: {
+                curve: 'smooth',
+                width: 3
+            },
+            markers: {
+                size: 6,
+                strokeWidth: 2,
+                hover: { size: 8 }
+            },
+            colors: ['#3b82f6', '#10b981'],
+            dataLabels: { enabled: false },
+            title: {
+                text: 'Statistik Tugas Harian (7 Hari Terakhir)',
+                align: 'left',
+                style: { fontSize: '16px', fontWeight: 'bold' }
+            },
+            grid: {
+                row: {
+                    colors: ['#f3f3f3', 'transparent'],
+                    opacity: 0.5
                 },
-                dataLabels: {
-                    enabled: false
-                },
-                stroke: {
-                    curve: 'straight'
+                borderColor: '#e7e7e7'
+            },
+            xaxis: {
+                categories: @json($formattedDates),
+                labels: {
+                    style: { colors: '#6b7280' }
                 },
                 title: {
-                    text: 'Jumlah Tugas per Minggu',
-                    align: 'left'
+                    text: 'Tanggal',
+                    style: { color: '#6b7280' }
+                }
+            },
+            yaxis: {
+                title: {
+                    text: 'Jumlah Tugas',
+                    style: { color: '#6b7280' }
                 },
-                grid: {
-                    row: {
-                        colors: ['#f3f3f3', 'transparent'],
-                        opacity: 0.5
-                    },
-                },
-                xaxis: {
-                    categories: @json($weeks), // Label minggu
-                    title: {
-                        text: 'Minggu'
-                    }
-                },
-                yaxis: {
-                    title: {
-                        text: 'Jumlah Tugas'
+                labels: {
+                    style: { colors: '#6b7280' }
+                }
+            },
+            legend: {
+                position: 'top',
+                horizontalAlign: 'right',
+                markers: {
+                    radius: 12
+                }
+            },
+            tooltip: {
+                shared: true,
+                intersect: false,
+                y: {
+                    formatter: function (value) {
+                        return value + ' tugas';
                     }
                 }
-            };
+            }
+        };
 
-            var chart = new ApexCharts(document.querySelector("#taskTrendChart"), options);
-            chart.render();
-        });
-    </script>
+        var chart = new ApexCharts(document.querySelector("#taskTrendChart"), options);
+        chart.render();
+    });
+</script>
 @endsection
