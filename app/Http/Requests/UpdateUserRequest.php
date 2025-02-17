@@ -24,7 +24,7 @@ class UpdateUserRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $this->route('user')->id,
-            'phone' => 'required|string|max:15',
+            'phone' => 'required|string|max:12',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
@@ -40,6 +40,7 @@ class UpdateUserRequest extends FormRequest
             'photo.image' => 'File yang diupload harus berupa gambar.',
             'photo.mimes' => 'Foto harus bertipe JPEG, PNG, atau JPG.',
             'photo.max' => 'Ukuran foto tidak boleh lebih dari 2MB.',
+            'phone.max' => 'Nomor telepon tidak boleh lebih dari 12 karakter.',
         ];
     }
 }

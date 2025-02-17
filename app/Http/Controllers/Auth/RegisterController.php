@@ -55,7 +55,7 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8'],
-            'phone' => ['required', 'string', 'max:20'],
+            'phone' => ['required', 'string', 'max:12'],
             'photo' => ['required', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
         ], $this->messages());
     }
@@ -73,6 +73,7 @@ class RegisterController extends Controller
         'photo.required' => 'Foto profil wajib diunggah.',
         'photo.image' => 'File yang diunggah harus berupa gambar.',
         'photo.mimes' => 'Foto harus memiliki ekstensi jpg, jpeg, atau png.',
+        'phone.max' => 'Nomor HP maksimal terdiri dari 12 karakter.',
         'photo.max' => 'Ukuran foto maksimal 2MB.',
     ];
 }
@@ -105,4 +106,4 @@ class RegisterController extends Controller
         return redirect()->route('login')->with('success', 'Registrasi berhasil!');
     }
 
-} 
+}

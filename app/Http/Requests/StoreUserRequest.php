@@ -24,7 +24,7 @@ class StoreUserRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'phone' => 'required|string|max:15',
+            'phone' => 'required|string|max:12',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
@@ -42,7 +42,7 @@ class StoreUserRequest extends FormRequest
 
             'phone.required' => 'Nomor telepon harus diisi.',
             'phone.string' => 'Nomor telepon harus berupa string.',
-            'phone.max' => 'Nomor telepon tidak boleh lebih dari 15 karakter.',
+            'phone.max' => 'Nomor telepon tidak boleh lebih dari 12 karakter.',
 
             'photo.image' => 'File yang diupload harus berupa gambar.',
             'photo.mimes' => 'Foto harus bertipe JPEG, PNG, atau JPG.',
