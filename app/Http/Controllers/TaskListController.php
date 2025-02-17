@@ -9,12 +9,18 @@ use Illuminate\Support\Facades\Auth;
 class TaskListController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $taskLists = TaskList::where('user_id', Auth::id())->paginate(10);
+        $searchKeyword = $request->query('search_keyword');
+
+        $taskLists = TaskList::where('user_id', Auth::id())
+            ->when($searchKeyword, function ($query, $searchKeyword) {
+                return $query->where('name', 'like', '%' . $searchKeyword . '%');
+            })
+            ->paginate(10);
+
         return view('user.task-lists.list', compact('taskLists'));
     }
-
     public function create()
     {
         return view('user.task-lists.add');

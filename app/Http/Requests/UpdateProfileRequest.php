@@ -31,8 +31,8 @@ class UpdateProfileRequest extends FormRequest
 
         // Jika password baru diinput, kita validasi current_password dan new_password
         if ($this->filled('new_password')) {
-            $rules['current_password'] = 'required|current_password'; // Memastikan password lama valid
-            $rules['new_password'] = 'required|string|min:8|confirmed'; // Memastikan password baru valid
+            $rules['current_password'] = 'required|current_password';
+            $rules['new_password'] = 'required|string|min:8|confirmed';
         }
 
         return $rules;

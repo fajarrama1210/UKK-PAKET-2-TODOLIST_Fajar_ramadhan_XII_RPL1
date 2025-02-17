@@ -73,8 +73,6 @@ Kategori
         </div>
     </div>
 </div>
-
-
 @endsection
 
 
