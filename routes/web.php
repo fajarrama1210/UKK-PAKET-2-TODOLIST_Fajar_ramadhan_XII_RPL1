@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TaskController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TaskListController;
 use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\AdminDashboardController;
+use Symfony\Component\HttpKernel\Profiler\Profile;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -68,4 +70,12 @@ Route::prefix('admin')
         Route::prefix('category')->name('category.')->group(function () {
             Route::get('/', [CategoryController::class, 'indexUser'])->name('list');
         });
+
+        Route::prefix('profile')->name('profile.')->group(function () {
+            Route::get('/', [ProfileController::class, 'index'])->name('list');
+            Route::get('/add', [ProfileController::class, 'create'])->name('add');
+            Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
+            Route::put('/update', [ProfileController::class, 'update'])->name('update');
+        });
+
     });

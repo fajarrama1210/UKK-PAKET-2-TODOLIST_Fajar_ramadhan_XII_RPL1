@@ -14,7 +14,7 @@
                             <label for="">Foto Profil</label>
                             <div class="border p-2 rounded bg-light d-flex justify-content-center">
                                 @if ($user->photo)
-                                    <img src="{{ asset('storage/' . $user->photo) }}" alt="Foto Profil" class="img-fluid rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                                    <img src="{{ asset('storage/' . $user->photo) }}" alt="Foto Profil" class="img-fluid rounded-circle"  style="object-fit: cover; width: 250px; height: 250px; border-radius: 50%; object-position: top;">
                                 @else
                                     <p class="text-muted">Tidak ada foto</p>
                                 @endif

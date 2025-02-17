@@ -1,6 +1,4 @@
-<!-- Sidebar Start -->
 <aside class="left-sidebar">
-    <!-- Sidebar scroll-->
     <div>
         <div class="brand-logo d-flex align-items-center justify-content-between">
             <a href="#" class="text-nowrap logo-img">
@@ -13,62 +11,72 @@
                 <i class="ti ti-x fs-8 text-muted"></i>
             </div>
         </div>
-        <!-- Sidebar navigation-->
         <nav class="sidebar-nav scroll-sidebar" data-simplebar>
             <ul id="sidebarnav">
-                <!-- Home Section -->
                 <li class="nav-small-cap">
                     <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                     <span class="hide-menu">Home</span>
                 </li>
-                <!-- Dashboard Link -->
+
                 <li class="sidebar-item">
                     <a class="sidebar-link" href="{{ route('user.dashboard') }}" aria-expanded="false">
                         <span>
-                            @include('components.icons.dashboard') <!-- Ganti dengan icon dashboard jika diperlukan -->
+                            @include('components.icons.dashboard')
                         </span>
                         <span class="hide-menu">Dashboard</span>
                     </a>
                 </li>
-                <!-- Category Link -->
+
                 <li class="sidebar-item">
                     <a class="sidebar-link" href="{{ route('user.category.list') }}" aria-expanded="false">
                         <span>
-                            @include('components.icons.category') <!-- Ganti dengan icon category jika diperlukan -->
+                            @include('components.icons.category')
                         </span>
                         <span class="hide-menu">Category</span>
                     </a>
                 </li>
-                <!-- Task Lists Link -->
+
                 <li class="sidebar-item">
                     <a class="sidebar-link" href="{{ route('user.list.list') }}" aria-expanded="false">
                         <span>
-                            @include('components.icons.task') <!-- Ganti dengan icon task jika diperlukan -->
+                            @include('components.icons.task')
                         </span>
                         <span class="hide-menu">Task Lists</span>
                     </a>
                 </li>
-                <!-- Divider -->
+                <li class="nav-small-cap">
+                    <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                    <span class="hide-menu">Pengaturan</span>
+                </li>
+
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="{{ route('user.profile.list') }}" aria-expanded="false">
+                        <span>
+                            @include('components.icons.user')
+                        </span>
+                        <span class="hide-menu">Profile</span>
+                    </a>
+                </li>
+
                 <li class="nav-small-cap">
                     <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                     <span class="hide-menu">Tugas Saya</span>
                 </li>
 
-                <!-- Loop melalui Task Lists -->
                 @foreach (auth()->user()->TaskLists as $taskList)
                     <li class="sidebar-item">
                         <a class="sidebar-link"
                             href="{{ route('user.tasks.list.filter', ['taskList' => $taskList->id]) }}"
                             aria-expanded="false">
                             <span>
-                                @include('components.icons.circle') <!-- Ganti dengan icon task list jika diperlukan -->
+                                @include('components.icons.circle')
                             </span>
                             <span class="hide-menu">{{ $taskList->name }}</span>
                         </a>
                     </li>
                 @endforeach
+
             </ul>
         </nav>
     </div>
 </aside>
-<!-- Sidebar End -->
