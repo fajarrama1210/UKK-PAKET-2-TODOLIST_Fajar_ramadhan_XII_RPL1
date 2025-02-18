@@ -2,7 +2,7 @@
 @section('title')
     Update Tugas
 @endsection
-<?php $listid = $task->list_id; ?> {{-- Ambil Task List ID langsung dari task yang sedang diedit --}}
+<?php $listid = $task->list_id; ?> 
 @section('content')
     <div class="row">
         <div class="col-md-8">

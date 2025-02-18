@@ -17,32 +17,51 @@ class TaskController extends Controller
      */
     public function index(Request $request, TaskList $taskList)
     {
+        // Query dasar
         $query = Task::where('user_id', Auth::id())
-        ->where('list_id', $taskList->id);
-        // Menambahkan filter
+            ->where('list_id', $taskList->id);
+
+        // Periksa dan perbarui status tugas yang sudah melewati deadline
+        $tasksToUpdate = Task::where('user_id', Auth::id())
+            ->where('list_id', $taskList->id)
+            ->where('deadline', '<', now())
+            ->where('status', '!=', 'completed')
+            ->get();
+
+        foreach ($tasksToUpdate as $task) {
+            $task->status = 'overdue';
+            $task->save();
+        }
+
+        // Fitur Pencarian
+        if ($request->has('search_keyword') && $request->search_keyword != '') {
+            $query->where(function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search_keyword . '%')
+                    ->orWhere('description', 'like', '%' . $request->search_keyword . '%');
+            });
+        }
+
+        // Filter Kategori
         if ($request->has('filter_kategori') && $request->filter_kategori != '') {
             $query->where('category_id', $request->filter_kategori);
         }
+
+        // Filter Status
         if ($request->has('filter_status') && $request->filter_status != '') {
             $query->where('status', $request->filter_status);
         }
+
+        // Filter Prioritas
         if ($request->has('filter_prioritas') && $request->filter_prioritas != '') {
             $query->where('priority', $request->filter_prioritas);
         }
-        if ($request->has('filter_bulan') && $request->filter_bulan != '') {
-            $query->whereMonth('date', $request->filter_bulan);
-        }
-        if ($request->has('filter_tahun') && $request->filter_tahun != '') {
-            $query->whereYear('date', $request->filter_tahun);
-        }
 
-        $tasks = $query->orderBy('created_at', 'desc')->get();
+        // Pagination dan Pengurutan
+        $tasks = $query->orderBy('created_at', 'desc')->paginate(10);
         $categories = Category::all();
 
-        return view('user.task.list', compact('tasks', 'categories'));
-    }
-
-    /**
+        return view('user.task.list', compact('tasks', 'categories', 'taskList'));
+    }    /**
      * Show the form for creating a new resource.
      */
     public function create()
@@ -122,7 +141,7 @@ class TaskController extends Controller
             'deadline' => $request->deadline ?? $task->deadline,
         ]);
 
-        return redirect()->route('user.tasks.list.filter', ['taskList' => $taskList->id])->with('success', 'Data berhasil diperbarui');
+        return redirect()->route('user.tasks.list.filter', ['taskList' => $task->list_id])->with('success', 'Data berhasil diperbarui');
     }
     /**
      * Remove the specified resource from storage.
