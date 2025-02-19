@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class AdminDashboardController extends Controller
 {
+
     public function index()
     {
         // Menghitung kategori, pengguna, dan tugas
@@ -40,10 +41,10 @@ class AdminDashboardController extends Controller
             ->keyBy('date');
 
         // Query data tugas selesai harian untuk 7 hari terakhir
-        $dailyCompleted = Task::where('status', 'complete')
-            ->whereBetween('updated_at', [$startDate, $endDate])
-            ->selectRaw('DATE(updated_at) as date, COUNT(*) as count')
-            ->groupBy(DB::raw('DATE(updated_at)'))  // Menggunakan DATE(updated_at) dalam GROUP BY
+        $dailyCompleted = Task::where('status', 'completed') // Pastikan status yang digunakan adalah 'completed'
+            ->whereBetween('created_at', [$startDate, $endDate]) // Gunakan created_at atau kolom khusus untuk tanggal selesai
+            ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
+            ->groupBy(DB::raw('DATE(created_at)'))  // Menggunakan DATE(created_at) dalam GROUP BY
             ->get()
             ->keyBy('date');
 
@@ -62,5 +63,4 @@ class AdminDashboardController extends Controller
         }
 
         return view('admin.dashboard', compact('categorycount', 'usercount', 'taskcount', 'taskPending', 'formattedDates', 'taskData', 'completedData'));
-    }
-    }
+    }    }

@@ -32,20 +32,20 @@ class UserDashboardController extends Controller
 
         // Query data tugas harian
         $dailyTasks = Task::where('user_id', $user->id)
-            ->whereBetween('created_at', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d 23:59:59')])
-            ->selectRaw('DATE(CONVERT_TZ(created_at, "+00:00", "+07:00")) as date, COUNT(*) as count')
-            ->groupBy(DB::raw('DATE(CONVERT_TZ(created_at, "+00:00", "+07:00"))'))
+            ->whereBetween('created_at', [$startDate->startOfDay(), $endDate->endOfDay()])
             ->get()
-            ->keyBy('date');
+            ->groupBy(function($task) use ($timezone) {
+                return Carbon::parse($task->created_at)->setTimezone($timezone)->format('Y-m-d');
+            });
 
         // Query data tugas selesai harian
         $dailyCompleted = Task::where('user_id', $user->id)
             ->where('status', 'completed')
-            ->whereBetween('updated_at', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d 23:59:59')])
-            ->selectRaw('DATE(CONVERT_TZ(updated_at, "+00:00", "+07:00")) as date, COUNT(*) as count')
-            ->groupBy(DB::raw('DATE(CONVERT_TZ(updated_at, "+00:00", "+07:00"))'))
+            ->whereBetween('updated_at', [$startDate->startOfDay(), $endDate->endOfDay()])
             ->get()
-            ->keyBy('date');
+            ->groupBy(function($task) use ($timezone) {
+                return Carbon::parse($task->updated_at)->setTimezone($timezone)->format('Y-m-d');
+            });
 
         // Format data untuk chart
         $formattedDates = [];
@@ -56,8 +56,11 @@ class UserDashboardController extends Controller
             $formattedDate = Carbon::createFromFormat('Y-m-d', $date, $timezone)->format('d M');
             $formattedDates[] = $formattedDate;
 
-            $taskData[] = $dailyTasks->has($date) ? $dailyTasks[$date]->count : 0;
-            $completedData[] = $dailyCompleted->has($date) ? $dailyCompleted[$date]->count : 0;
+            // Data tugas dibuat
+            $taskData[] = isset($dailyTasks[$date]) ? $dailyTasks[$date]->count() : 0;
+
+            // Data tugas selesai
+            $completedData[] = isset($dailyCompleted[$date]) ? $dailyCompleted[$date]->count() : 0;
         }
 
         // Statistik lainnya (opsional)
@@ -85,4 +88,4 @@ class UserDashboardController extends Controller
             'completedData'
         ));
     }
-    }
+}
